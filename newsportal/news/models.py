@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 
 
 class Author(models.Model):
@@ -16,9 +17,15 @@ class Author(models.Model):
         self.rating = posts_rating * 3 + comments_rating + posts_comments_rating
         self.save()
 
+    def __str__(self):
+        return f'{self.user.username}'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Post(models.Model):
@@ -51,6 +58,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title.title()} {self.text[:20]}'
+
+    def get_absolute_url(self):
+        return reverse('news_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):

@@ -4,29 +4,36 @@
 {% load custom_tags %}
 
 {% block title %}
-News
+Search
 {% endblock title %}
 
 {% block content %}
-    <h1>Новости (всего {{ allnews|length }})</h1>
+    <h1>Новости (всего {{ posts|length }})</h1>
+    <h3>{% current_time '%Y %b %d' %}</h3>
+    <form action="" method="get">
+        {{ filterset.form.as_p }}
+        <!-- <input type="date" min="2024-04-01" max="{% current_time %}" value="{% current_time %}"> -->
+        <input type="submit" value="Найти" />
+    </form>
     <hr>
-{% if allnews %}
+
+{% if posts %}
     <table>
         <tr>
             <td><b>Заголовок</b></td>
             <td><b>Дата публикации</b></td>
             <td><b>Содержание</b></td>
         </tr>
-        {% for news in allnews %}
+        {% for post in posts %}
         <tr>
-            <td>{{ news.title|censor }}</td>
-            <td>{{ news.post_time|date:"d M Y" }}</td>
-            <td>{{ news.text|truncatewords:20|censor }}</td>
+            <td>{{ post.title|censor }}</td>
+            <td>{{ post.post_time|date:'d M Y' }}</td>
+            <td>{{ post.text|truncatechars:20|censor }}</td>
         </tr>
         {% endfor %}
     </table>
 {% else %}
-    <h2>Новостей нет!</h2>
+    <h2>Новостей нет</h2>
 {% endif %}
 
 <p></p>
