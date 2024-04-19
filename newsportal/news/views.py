@@ -27,7 +27,7 @@ class NewsCreate(CreateView):
     form_class = PostForm
     template_name = 'post_edit.html'
 
-    def from_valid(self, form):
+    def form_valid(self, form):
         post = form.save(commit=False)
         post.news_type = 'NE'
         return super().form_valid(form)
@@ -50,7 +50,7 @@ class ArticleCreate(CreateView):
     form_class = PostForm
     template_name = 'post_edit.html'
 
-    def from_valid(self, form):
+    def form_valid(self, form):
         post = form.save(commit=False)
         post.news_type = 'AR'
         return super().form_valid(form)
