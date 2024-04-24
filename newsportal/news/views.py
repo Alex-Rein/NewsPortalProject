@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (ListView, DetailView,
                                   CreateView, UpdateView, DeleteView)
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.shortcuts import redirect
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm
@@ -14,6 +17,11 @@ class NewsList(ListView):
     template_name = 'allnews.html'
     context_object_name = 'allnews'
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
 
 
 class NewsDetail(DetailView):
@@ -33,7 +41,7 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'post_edit.html'
@@ -74,4 +82,13 @@ class PostSearch(ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         return context
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    authors_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        authors_group.user_set.add(user)
+    return redirect('/news/')
 

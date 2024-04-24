@@ -1,8 +1,10 @@
 from django.urls import path
 from .views import (NewsList, NewsDetail, PostSearch,
-                    NewsCreate, NewsUpdate, NewsDelete)
+                    NewsCreate, NewsUpdate, NewsDelete,
+                    upgrade_me)
 
 
+#  Ссылки начинаются с /news/
 urlpatterns = [
     path('', NewsList.as_view(), name='news_list'),
     path('<int:pk>', NewsDetail.as_view(), name='news_detail'),
@@ -10,4 +12,5 @@ urlpatterns = [
     path('create/', NewsCreate.as_view(), name='news_create'),
     path('<int:pk>/edit/', NewsUpdate.as_view(), name='news_edit'),
     path('<int:pk>/delete', NewsDelete.as_view(), name='news_delete'),
+    path('upgrade/', upgrade_me, name='upgrade')
 ]
