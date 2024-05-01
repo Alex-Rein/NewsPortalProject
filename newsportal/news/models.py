@@ -23,6 +23,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    subscribers = models.ManyToManyField(User, blank=True, related_name='categories')
 
     def __str__(self):
         return f'{self.name}'
@@ -61,6 +62,9 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('news_detail', args=[str(self.id)])
+
+    # def get_absolute_url(self):
+    #     return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):

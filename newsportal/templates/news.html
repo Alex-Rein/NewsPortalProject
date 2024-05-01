@@ -9,6 +9,13 @@ Post
 {% block content %}
     <h1>{{ news.title|censor }}</h1>
     <h3>{{ news.post_time|date:"d M Y" }}</h3>
+    <h4>Категории:</h4>
+    <h5>
+        {% for cat in news.category.all %}
+            {{ cat.name }}<br>
+        {% endfor %}
+    </h5>
+    <button><a href="/news/subscribe/">Подписаться на категорию</a></button>
     <hr>
     {{ news.text|censor }}
 {% endblock content %}
