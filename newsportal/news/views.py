@@ -42,10 +42,12 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.news_type = 'NE'
+
         today = datetime.date.today()  # Третий вариант введения ограничения на посты
         post_limit = Post.objects.filter(author=post.author, post_time=today).count()
         if post_limit >= 3:
             return render(self.request, 'post_limit.html', {'author': post.author})
+
         return super().form_valid(form)
 
 
