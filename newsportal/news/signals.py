@@ -39,7 +39,8 @@ from .tasks import send_new_post_notification
 @receiver(m2m_changed, sender=PostCategory)
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
-        send_new_post_notification.delay(post_id=instance.pk)
+        # send_new_post_notification.delay(post_id=instance.pk)  # debug
+        pass
 
 
 # @receiver(m2m_changed, sender=PostCategory)

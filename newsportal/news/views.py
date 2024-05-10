@@ -12,6 +12,7 @@ from django.core.mail import send_mail
 from .models import Post, Category, Author
 from .filters import PostFilter
 from .forms import PostForm
+from .tasks import send_new_post_notification
 
 
 class NewsList(ListView):
@@ -47,7 +48,9 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         post_limit = Post.objects.filter(author=post.author, post_time=today).count()
         if post_limit >= 3:
             return render(self.request, 'post_limit.html', {'author': post.author})
-
+        post.save()
+        print('!!!DEBUG pk =', post.pk)
+        send_new_post_notification.delay(post.pk)
         return super().form_valid(form)
 
 
