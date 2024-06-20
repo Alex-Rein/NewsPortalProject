@@ -1,2 +1,4 @@
-newsportal/test.py
-.idea/
+/newsportal/test.py
+/.idea
+/newsportal/.env
+/newsportal/cache_files/
