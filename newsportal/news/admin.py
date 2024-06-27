@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Post, Category
+from modeltranslation.admin import TranslationAdmin
+
+from .models import Post, Category, Comment, Author
 
 
 # создаём новый класс для представления товаров в админке
@@ -24,6 +26,31 @@ class CategoryAdmin(admin.ModelAdmin):
         return ', '.join([sub.username for sub in obj.subscribers.all()])
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'user', 'date', 'rating', 'post')
+    list_display_links = ('text', )
+    list_filter = ('user', 'post')
+
+
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'rating')
+    list_display_links = ('user', )
+
+
+class TransCategoryAdmin(CategoryAdmin, TranslationAdmin):
+    model = Category
+
+
+class TransPostAdmin(PostAdmin, TranslationAdmin):
+    model = Post
+
+
+class TransCommentAdmin(CommentAdmin, TranslationAdmin):
+    model = Comment
+
+
 # Register your models here.
-admin.site.register(Post, PostAdmin)
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(Post, TransPostAdmin)
+admin.site.register(Category, TransCategoryAdmin)
+admin.site.register(Comment, TransCommentAdmin)
+admin.site.register(Author, AuthorAdmin)

@@ -1,4 +1,4 @@
-from .models import Category, Post
+from .models import Category, Post, Comment
 from modeltranslation.translator import register, TranslationOptions   # импортируем декоратор для
 # перевода и класс настроек, от которого будем наследоваться
 
@@ -12,4 +12,9 @@ class CategoryTranslationOptions(TranslationOptions):
 
 @register(Post)
 class PostTranslationOptions(TranslationOptions):
-    fields = ('news_type', 'title', 'text', 'category')
+    fields = ('title', 'text', )
+
+
+@register(Comment)
+class CommentTranslationOptions(TranslationOptions):
+    fields = ('text', )
