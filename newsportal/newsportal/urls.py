@@ -18,10 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 
+from news.views import Index
+
 urlpatterns = [
+    path('i18n', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
     path('news/', include('news.urls')),
     path('', RedirectView.as_view(pattern_name='news_list'), name='index'),
     path('articles/', include('news.urls2')),
     path('accounts/', include('allauth.urls')),
+    path('test/', Index.as_view())
 ]

@@ -1,13 +1,16 @@
 import datetime
 
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views import View
 from django.views.generic import (ListView, DetailView,
                                   CreateView, UpdateView, DeleteView)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core.cache import cache
+from django.utils.translation import gettext as _  # импортируем функцию для перевода
 
 from .models import Post, Category, Author
 from .filters import PostFilter
@@ -146,3 +149,15 @@ class CategoryListView(NewsList):
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
         context['category'] = self.category
         return context
+
+
+class Index(View):
+    def get(self, request):
+        string = _('Hello world')
+
+        # return HttpResponse(string)
+
+        context = {
+            'string': string
+        }
+        return HttpResponse(render(request, 'index.html', context))

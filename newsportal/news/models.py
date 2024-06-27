@@ -5,6 +5,9 @@ from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.urls import reverse
 
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext_lazy # импортируем «ленивый» геттекст с подсказкой
+
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -23,7 +26,8 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, help_text=_('category name'))  # добавим переводящийся
+    # текст подсказку к полю)
     subscribers = models.ManyToManyField(User, blank=True, related_name='categories')
 
     def __str__(self):
@@ -45,7 +49,11 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     rating = models.IntegerField(default=0)
-    category = models.ManyToManyField(Category, through='PostCategory')
+    category = models.ManyToManyField(
+        Category,
+        through='PostCategory',
+        verbose_name=pgettext_lazy('help text for MyModel model', 'This is the help text'),
+    )
 
     def like(self):
         self.rating += 1
